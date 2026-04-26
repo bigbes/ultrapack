@@ -1,5 +1,6 @@
 ---
 description: Implement one phase of an approved plan — code, tests, commit. Dispatched per-phase from uexecute.
+model: deepseek/deepseek-v4-flash
 mode: subagent
 permission:
   edit: ask

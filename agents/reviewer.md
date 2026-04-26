@@ -1,5 +1,6 @@
 ---
 description: Independent code review against a task's Plan, Invariants, and Assumptions. Single dispatch. Confidence-filtered (≥80), severity-tiered. Dispatched from ureview after verify passes.
+model: opencode-zen/gpt-5.5
 mode: subagent
 permission:
   edit: deny

@@ -1,5 +1,6 @@
 ---
 description: General-purpose deep research. Decomposes a query, investigates systematically across the web, library docs, and the current codebase, returns a synthesized answer shaped by the question. Use when the main agent needs external knowledge beyond what Context7 or a quick web search gives.
+model: deepseek/deepseek-v4-flash
 mode: subagent
 permission:
   edit: deny

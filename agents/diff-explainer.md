@@ -1,5 +1,6 @@
 ---
 description: Explain diffs by behavior and review order. Use when the user wants to understand changes, not review for defects.
+model: zhipuai/glm-5.1
 mode: subagent
 permission:
   edit: deny

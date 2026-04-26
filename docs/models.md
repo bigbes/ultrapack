@@ -5,11 +5,11 @@ Snapshot of the model landscape and routing decisions as of **April 2026**, kept
 ## Current routing
 
 - **GLM-5.1** → `@explorer`, `@finder`, `@summarizer`, `@diff-explainer`
-- **DeepSeek V4-Flash** → `@implementer`, `@researcher`
-- **Kimi K2.6** → `@librarian`
-- **GPT-5.5** (via opencode-zen) → `@reviewer`, `@oracle`
+- **DeepSeek V4-Flash** → `@implementer`, `@researcher`, `@rush`
+- **Kimi K2.6** → `@librarian`, `@smart`
+- **GPT-5.5** (via opencode-zen) → `@reviewer`, `@oracle`, `@deep`
 
-Tier philosophy: cheap by default; premium reserved for the two roles where autonomous deep reasoning has the highest payoff and the lowest call volume (review, advisory).
+Tier philosophy: cheap by default; premium reserved for the two roles where autonomous deep reasoning has the highest payoff and the lowest call volume (review, advisory). The three personality agents (`@rush`/`@smart`/`@deep`) are general-purpose dispatch targets — they share each tier with a specialised agent rather than introducing a new tier.
 
 ## Why each role got each model
 
@@ -17,6 +17,7 @@ Tier philosophy: cheap by default; premium reserved for the two roles where auto
 - **`@implementer` / `@researcher` → DeepSeek V4-Flash.** Top-of-cheap reasoning, $0.14/$0.28 with 1M context. Flash specifically (not Pro) — V4-Pro thinking-mode currently DNFs on tool calls in OpenCode (Simon Willison's testing, April 2026). Flash works reliably today.
 - **`@librarian` → Kimi K2.6.** Long-context multi-repo / commit-history archaeology. K2.6 is the only Chinese non-Big-3 model that landed Tier A on real-world coding benchmarks ("writes production-grade code without nudging" — AkitaOnRails, April 24 2026). 256K context covers almost all archaeology cases.
 - **`@reviewer` / `@oracle` → GPT-5.5.** Deep autonomous reasoning where mistakes are expensive. Both dispatched once per task, so spend is bounded by tasks-per-day. Aligns with OMO's recommendation that "principle-driven autonomous reasoning" roles map to GPT-class models.
+- **`@rush` / `@smart` / `@deep` → tier mirrors Amp's `Rush`/`Smart`/`Deep` modes.** Personality agents lifted from Amp's system prompts (see [`amp_system_prompts.json`](../amp_system_prompts.json)). `@rush` on V4-Flash for cheapest-fastest execution (Amp's Haiku slot); `@smart` on Kimi K2.6 for pragmatic-engineer balance (Amp's Sonnet/Opus slot, kept on the cheap-default tier); `@deep` on GPT-5.5 for thorough reasoning that leans on `@oracle` (Amp's GPT slot).
 
 ## Background sources
 

@@ -57,9 +57,9 @@ To upgrade: `git -C ~/.local/share/ultrapack pull`. Symlinks pick up changes aut
 Each agent declares its own `model:` in frontmatter, so the matching providers must be configured in your `opencode.json`:
 
 - `zhipuai` — for GLM-5.1 (`@explorer`, `@finder`, `@summarizer`, `@diff-explainer`)
-- `deepseek` — for DeepSeek V4-Flash (`@implementer`, `@researcher`)
-- `moonshot` — for Kimi K2.6 (`@librarian`)
-- `opencode-zen` — for GPT-5.5 (`@reviewer`, `@oracle`)
+- `deepseek` — for DeepSeek V4-Flash (`@implementer`, `@researcher`, `@rush`)
+- `moonshot` — for Kimi K2.6 (`@librarian`, `@smart`)
+- `opencode-zen` — for GPT-5.5 (`@reviewer`, `@oracle`, `@deep`)
 
 If a provider isn't configured, the affected agent fails loud rather than silently falling back to a different model. Rationale and alternatives in [`docs/models.md`](docs/models.md).
 
@@ -121,6 +121,11 @@ Model assignments are pinned in each agent's frontmatter; see [`docs/models.md`]
 - `@finder` (GLM-5.1) — Fast file and line-range discovery, no architecture essay.
 - `@oracle` (GPT-5.5) — Senior engineering advisor for architecture, planning, debugging strategy, tradeoffs.
 - `@diff-explainer` (GLM-5.1) — Behavior-first diff walkthrough.
+
+General-purpose personality agents (depth/speed tradeoff, lifted from Amp's tier scheme):
+- `@rush` (DeepSeek V4-Flash) — Fast executor, terse output, parallel tool use. For well-defined tasks where speed matters more than discussion.
+- `@smart` (Kimi K2.6) — Pragmatic balanced default; builds context first, smallest correct change, persists end-to-end.
+- `@deep` (GPT-5.5) — Thorough reasoner; leans on `@oracle` for hard structural calls; for complex, multi-file, or risky work.
 
 ## License
 

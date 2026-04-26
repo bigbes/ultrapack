@@ -30,6 +30,8 @@ Core ideas:
 
 ## Install
 
+### Claude Code
+
 Add the repo as a marketplace and install the plugin:
 
 ```
@@ -38,6 +40,22 @@ Add the repo as a marketplace and install the plugin:
 ```
 
 Then `/reload-plugins`. Verify with `/up:make` or by listing skills.
+
+### OpenCode
+
+Generate the OpenCode layer:
+
+```bash
+python3 scripts/generate-opencode.py
+```
+
+OpenCode reads the generated files from `.opencode/`:
+
+- Commands: `/make`, `/try`, `/step-back`, `/summary`, `/reflect`, `/explain-diff`
+- Agents: `@explorer`, `@implementer`, `@researcher`, `@reviewer`, `@summarizer`, `@librarian`, `@finder`, `@oracle`, `@diff-explainer`
+- Skills: `.opencode/skills/*/SKILL.md`
+
+Claude remains the source format. Edit `plugins/up/` and regenerate instead of hand-editing generated OpenCode files.
 
 ## Design
 
@@ -86,6 +104,7 @@ Discipline skills:
 - `/up:step-back` — Circuit breaker: stop, diagnose why approaches failed, propose new direction.
 - `/up:summary` — Produce a summary so another session can continue with zero context.
 - `/up:reflect` — Reflect on the dialogue, extract learnings into CLAUDE.md / memory / docs.
+- `/explain-diff` (OpenCode) — Explain a diff by behavior and review order.
 
 ### Agents
 
@@ -94,6 +113,10 @@ Discipline skills:
 - `up:reviewer` (Sonnet 4.6) — Independent review against Plan + Invariants + Assumptions. Confidence-filtered (≥80), severity-tiered.
 - `up:researcher` (Sonnet 4.6) — General-purpose investigation: decompose + systematically answer.
 - `up:summarizer` (Sonnet 4.6) — Drafts the handoff prose for `/up:summary`; gathers repo state, never writes to disk.
+- `librarian` (OpenCode) — Deep multi-repo/source archaeology, commit-history context, and architecture explanations.
+- `finder` (OpenCode) — Fast file and line-range discovery, no architecture essay.
+- `oracle` (OpenCode) — Senior engineering advisor for architecture, planning, debugging strategy, and tradeoffs.
+- `diff-explainer` (OpenCode) — Behavior-first diff walkthrough, not a defect review.
 
 ## License
 

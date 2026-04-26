@@ -4,7 +4,7 @@ OpenCode skill pack for spec-driven, git-centered development. The whole workflo
 
 ## Repo layout
 
-- `agents/` — subagents (`@implementer`, `@reviewer`, `@explorer`, `@summarizer`, `@researcher`, `@finder`, `@librarian`, `@oracle`, `@diff-explainer`, `@rush`, `@smart`, `@deep`)
+- `agents/` — subagents (`@implementer`, `@reviewer`, `@explorer`, `@summarizer`, `@researcher`, `@finder`, `@librarian`, `@oracle`, `@diff-explainer`, `@rush`, `@smart`, `@deep`, `@look-at`)
 - `commands/` — slash commands (`/make`, `/try`, `/step-back`, `/summary`, `/reflect`, `/explain-diff`)
 - `skills/<name>/SKILL.md` — process and discipline skills (`udesign`, `uplan`, `uexecute`, `uverify`, `ureview`, `udebug`, `udocument`, `git-worktrees`, `handsoff`, `test-driven-development`)
 - `references/` — shared snippets (`brevity.md`, `principles.md`) included by skills

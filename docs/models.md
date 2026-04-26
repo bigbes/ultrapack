@@ -8,8 +8,9 @@ Snapshot of the model landscape and routing decisions as of **April 2026**, kept
 - **DeepSeek V4-Flash** → `@implementer`, `@researcher`, `@rush`
 - **Kimi K2.6** → `@librarian`, `@smart`
 - **GPT-5.5** (via opencode-zen) → `@reviewer`, `@oracle`, `@deep`
+- **Gemini 3 Flash** (via google) → `@look-at`
 
-Tier philosophy: cheap by default; premium reserved for the two roles where autonomous deep reasoning has the highest payoff and the lowest call volume (review, advisory). The three personality agents (`@rush`/`@smart`/`@deep`) are general-purpose dispatch targets — they share each tier with a specialised agent rather than introducing a new tier.
+Tier philosophy: cheap by default; premium reserved for the two roles where autonomous deep reasoning has the highest payoff and the lowest call volume (review, advisory). The three personality agents (`@rush`/`@smart`/`@deep`) are general-purpose dispatch targets — they share each tier with a specialised agent rather than introducing a new tier. `@look-at` is the only agent on a vision-capable model; it carries Amp's "look at" role for images, diagrams, and PDFs.
 
 ## Why each role got each model
 
@@ -18,6 +19,7 @@ Tier philosophy: cheap by default; premium reserved for the two roles where auto
 - **`@librarian` → Kimi K2.6.** Long-context multi-repo / commit-history archaeology. K2.6 is the only Chinese non-Big-3 model that landed Tier A on real-world coding benchmarks ("writes production-grade code without nudging" — AkitaOnRails, April 24 2026). 256K context covers almost all archaeology cases.
 - **`@reviewer` / `@oracle` → GPT-5.5.** Deep autonomous reasoning where mistakes are expensive. Both dispatched once per task, so spend is bounded by tasks-per-day. Aligns with OMO's recommendation that "principle-driven autonomous reasoning" roles map to GPT-class models.
 - **`@rush` / `@smart` / `@deep` → tier mirrors Amp's `Rush`/`Smart`/`Deep` modes.** Personality agents lifted from Amp's system prompts (see [`amp_system_prompts.json`](../amp_system_prompts.json)). `@rush` on V4-Flash for cheapest-fastest execution (Amp's Haiku slot); `@smart` on Kimi K2.6 for pragmatic-engineer balance (Amp's Sonnet/Opus slot, kept on the cheap-default tier); `@deep` on GPT-5.5 for thorough reasoning that leans on `@oracle` (Amp's GPT slot).
+- **`@look-at` → Gemini 3 Flash.** Visual analyzer lifted from Amp's `rAR` "look at" prompt. Picked Gemini Flash because it's cheap, vision-native, and Amp itself uses Gemini Flash for the analogous `Search` role on its Models page. None of the existing pinned models are vision-capable, so this is the only routing slot that genuinely needs a new provider rather than reusing an existing one.
 
 ## Background sources
 
@@ -72,3 +74,4 @@ What pays for what (as of April 2026):
 - **Moonshot (direct)** — Kimi K2.6 (alternative path)
 - **DeepSeek (direct)** — V4-Flash, V4-Pro (1M context tier; aggressive cache pricing $0.145/M cache hit)
 - **opencode-zen** — GPT-5.5 (premium-tier exception path; also covers Opus 4.7 / Gemini 3.1 Pro if needed for swap)
+- **google** (AI Studio / Gemini API) — Gemini 3 Flash (vision-capable; the only vision-native model in the routing)

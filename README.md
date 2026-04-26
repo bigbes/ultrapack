@@ -60,6 +60,7 @@ Each agent declares its own `model:` in frontmatter, so the matching providers m
 - `deepseek` — for DeepSeek V4-Flash (`@implementer`, `@researcher`, `@rush`)
 - `moonshot` — for Kimi K2.6 (`@librarian`, `@smart`)
 - `opencode-zen` — for GPT-5.5 (`@reviewer`, `@oracle`, `@deep`)
+- `google` — for Gemini 3 Flash (`@look-at`)
 
 If a provider isn't configured, the affected agent fails loud rather than silently falling back to a different model. Rationale and alternatives in [`docs/models.md`](docs/models.md).
 
@@ -126,6 +127,7 @@ General-purpose personality agents (depth/speed tradeoff, lifted from Amp's tier
 - `@rush` (DeepSeek V4-Flash) — Fast executor, terse output, parallel tool use. For well-defined tasks where speed matters more than discussion.
 - `@smart` (Kimi K2.6) — Pragmatic balanced default; builds context first, smallest correct change, persists end-to-end.
 - `@deep` (GPT-5.5) — Thorough reasoner; leans on `@oracle` for hard structural calls; for complex, multi-file, or risky work.
+- `@look-at` (Gemini 3 Flash) — Visual analyzer; describes images, screenshots, diagrams, and PDFs; compares files. Read-only.
 
 ## License
 

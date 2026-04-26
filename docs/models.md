@@ -73,4 +73,20 @@ What pays for what (as of April 2026):
 - **kimi-for-coding** — Kimi K2.6 (`k2p6`); Moonshot's coding-tier subscription.
 - **deepseek** (direct) — V4-Flash, V4-Pro (1M context tier; aggressive cache pricing $0.145/M cache hit).
 - **openai** (direct) — GPT-5.4 / 5.5 family, including `-fast` and `-mini` / `-mini-fast` sizings (premium-tier exception path).
-- **opencode** — Gemini 3 Flash (vision-capable; the only vision-native model in the routing).
+- **opencode** — Gemini 3 Flash (vision-capable; the only vision-native model in the routing). Also serves as a single-gateway alternative for GLM, Kimi, GPT, and most other listed models — useful if you'd rather have one provider entry in `opencode.json` than four.
+
+## Provider notes
+
+Loose facts kept around for the next routing decision; not load-bearing on any current pin.
+
+### opencode/big-pickle
+
+Stealth model on the opencode gateway, widely rumoured to be a tuned GLM-4.6 (per Reddit). Free-tier as a feedback-gathering trial. Known for strong coding output — Go, AWS debugging, single-shot tasks. Two variants: standard (typical edits) and `big-pickle-max` (longer context, larger output budget). Slower than other free models in the same gateway but often produces better results, which raises the open question of whether the gain is the model itself or heavy prompting on top. Hits "too many requests" under load, so not safe to wire into a high-volume agent — fine for one-shot exploratory dispatch.
+
+### nvidia/
+
+40 requests-per-minute free tier across the catalog. Useful as a fallback or for low-volume specialty models (vision-instruct, FIM-capable Codestral, embeddings) that the paid providers don't carry.
+
+### ollama-cloud/
+
+$20/month subscription with generous usage caps — closer to "unmetered for an individual" than per-token pricing. Worth considering for high-volume cheap-tier work if `kimi-for-coding` / `zai-coding-plan` subscriptions ever get squeezed; carries equivalents of Kimi, GLM, Qwen-coder, Devstral, and others.

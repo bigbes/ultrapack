@@ -6,8 +6,8 @@ Format: `` - `<slug>` — <status> — branch `<branch>` — updated YYYY-MM-DD 
 
 ## In flight
 
-- `agent-model-routing` — executing — branch `main` — updated 2026-04-27
+_(none)_
 
 ## Done
 
-_(none)_
+- `agent-model-routing` — concluded 2026-04-27

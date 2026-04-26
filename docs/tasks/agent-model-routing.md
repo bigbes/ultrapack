@@ -1,6 +1,6 @@
 # Agent Model Routing
 
-**Status:** executing
+**Status:** done
 **Branch:** main
 **Worktree:** none
 **Mode:** interactive
@@ -80,8 +80,52 @@ Doc/config change — verification is install-and-invoke per uverify:
 
 ## Verify
 
-<empty — filled by uverify>
+**Result:** passed (static); runtime smoke deferred
+
+Positive:
+- CK1 — each `agents/*.md` has exactly one `model:` line at frontmatter line 3 (between `description:` and `mode:`)
+- CK2 — every `model:` value matches the design's tier mapping
+- CK3 — only the 4 planned strings appear in agent frontmatter (`zhipuai/glm-5.1`, `deepseek/deepseek-v4-flash`, `moonshot/kimi-k2.6`, `opencode-zen/gpt-5.5`)
+
+Negative:
+- CK4 — frontmatter remains structurally intact (`---` delimiters, no tabs, no parse-breaking insertions)
+- CK5 — README's `### Agents` labels do not drift from frontmatter (cross-checked all 9)
+
+Invariants / assumptions:
+- CK6 (IV1) — every agent has exactly one `model:` line — verified via `grep -c "^model:"`
+- CK7 (IV2) — only `@reviewer` and `@oracle` use `opencode-zen/gpt-5.5` — verified via `grep -l "opencode-zen"`
+- CK8 (PC2) — model assignment visible in agent file (frontmatter, not external config)
+- CK9 (AS1) — `provider/model-id` syntax used throughout; runtime resolution against user's `opencode.json` is unverifiable at this layer
+- CK10 (AS2, AS3, AS4) — quality + tool-calling reliability of each model is runtime-only; deferred to user smoke (see Notes)
+
+Smoke: deferred — OpenCode is the runtime that reads `model:`; cannot drive it from this Claude Code session.
+
+Notes:
+- User-driven smoke required: in OpenCode, dispatch each agent once (`@explorer`, `@implementer`, `@librarian`, `@reviewer`, `@oracle` cover all four model strings) and confirm dispatch succeeds without falling back to default. If a provider id mismatches `opencode.json`, fix per RK1 (one-line frontmatter edit per affected file).
 
 ## Conclusion
 
-<empty — filled by ureview>
+Outcome: per-agent `model:` pinned across 9 frontmatters and documented in README — `4ba97ac` (PH1), `5989f6c` (PH2).
+
+Invariants:
+- IV1 — every agent has exactly one `model:` line (verified `grep -c "^model:" agents/*.md` → all 1).
+- IV2 — only `@reviewer` and `@oracle` use the premium tier (verified `grep -l "opencode-zen" agents/*.md` → exactly those two).
+
+### Assumptions check
+
+- AS1 — held in form (`provider/model-id` syntax used everywhere); runtime routing against `opencode.json` unverifiable at this layer.
+- AS2 — unverifiable from this session; user-driven smoke required (deferred per Verify Notes).
+- AS3 — runtime-only; deferred to user smoke.
+- AS4 — runtime-only; deferred to user smoke.
+
+### Unknowns outcome
+
+- UK1 — resolved: direct provider prefixes (`zhipuai/`, `deepseek/`, `moonshot/`) for cheap tiers, `opencode-zen/` for premium.
+- UK2 — still open: librarian context overflow not yet observed in practice; revisit per `docs/models.md`.
+- UK3 — still open: V4-Pro upgrade gated on the DeepSeek 0.1 patch landing; revisit per `docs/models.md`.
+
+### Deviations from plan
+
+- PH2.2 — no `(Sonnet 4.6)` / `(Haiku 4.5)` parentheticals existed in README to strip. The OpenCode-only rewrite (prep commit `e357c51`) had already removed them. PH2.2 reduced to "add per-agent model + cross-link to `docs/models.md`". Confirmed by reviewer.
+
+Verified by: `up:reviewer` (≥80 confidence filter, no findings); runtime smoke deferred to user — see `## Verify → Notes`.

@@ -5,11 +5,6 @@ description: Reflect on the current dialogue, extract what's worth keeping, and 
 
 Capture learnings from the session that just happened so future sessions can replicate the outcome without re-discovery. This is a review of the dialogue, not of the code.
 
-
-## OpenCode routing
-
-Prefer `AGENTS.md` for portable project-wide agent guidance. Use `CLAUDE.md` only when preserving Claude compatibility or when the repo already treats it as canonical. If both are present, avoid duplicating full guidance; make one canonical and let the other point to it when possible.
-
 ## Process
 
 ### 1. Scan the session for non-obvious content
@@ -24,7 +19,7 @@ Ask yourself:
 Discard:
 - Anything obvious from reading the current code
 - One-off debugging details (the commit message holds them)
-- Anything already captured in AGENTS.md, CLAUDE.md, existing docs, or approved memory
+- Anything already captured in AGENTS.md, existing docs, or approved memory
 
 ### 2. Route each learning
 
@@ -55,7 +50,7 @@ Re-read each entry cold. Can a future fresh-context agent apply it without askin
 - Don't document the obvious
 - Don't duplicate across destinations — pick one home per learning
 - Don't write aspirational content ("we should eventually...")
-- Show proposed AGENTS.md or CLAUDE.md changes before applying them
+- Show proposed AGENTS.md changes before applying them
 - Do not write user/global memory unless the location is configured and the user has approved that behavior
 
 ## Terminal state

@@ -1,14 +1,13 @@
 ---
 description: Orchestrate the full ultrapack workflow — slug, task file, design, plan, execute, verify, review. Size-aware, resume-ready. Prefix args with `handsoff` for hands-off mode (fewer prompts, conservative defaults, decision log).
 ---
-
-# /up:make
+# /make
 
 Drives a task through the full ultrapack workflow: one task file at `docs/tasks/<slug>.md`, evolving through Design → Plan → Conclusion. Each stage is a separate skill. You orchestrate; the skills do the work.
 
 ## Arguments
 
-The user's description of the task follows the command. May be a one-liner ("fix the flaky login test") or a paragraph. Use it as the seed for the slug and the initial framing for `up:udesign`.
+Use `$ARGUMENTS` as the task description. May be a one-liner ("fix the flaky login test") or a paragraph. Use it as the seed for the slug and the initial framing for `udesign`.
 
 Hands-off activation: if the first whitespace-delimited token of the arguments is the literal string `handsoff`, enable hands-off mode. Strip that token before deriving the slug or framing for design. Any other spelling (`hands-off`, `handsOff`, `--handsoff`) is treated as part of the description — only the bare token `handsoff` activates. See `## Hands-off mode` below for behavior.
 
@@ -20,20 +19,22 @@ Derive a kebab-case slug from the description, 3 words max (e.g. "flaky-login-te
 
 ### 2. Resume check
 
-Before creating a new task file, check if `docs/tasks/<slug>.md` already exists.
+Before creating a new task file, check if `docs/tasks/<slug>.md` already exists. `docs/TODO.md` is the fast lookup for what's in flight; the per-task file is authoritative.
 
 - Exists: read `**Status:**` from the header. Resume from the next stage:
   - `design` → continue design
-  - `planning` → run `up:uplan`
-  - `executing` → run `up:uexecute`
-  - `reviewing` → run `up:ureview`
+  - `planning` → run `uplan`
+  - `executing` → run `uexecute`
+  - `reviewing` → run `ureview`
   - `done` → ask the user what they want to do (start a follow-up, re-open, view conclusion)
 - Doesn't exist: proceed to step 3.
-- Multiple in-flight tasks: if more than one `docs/tasks/*.md` has Status ≠ `done`, list them and ask which one the user means (or whether this is a new task).
+- Multiple in-flight tasks: if more than one task in `docs/TODO.md` has status ≠ `done` (cross-check against `docs/tasks/*.md` if `TODO.md` is missing or stale), list them and ask which one the user means (or whether this is a new task).
 
 ### 3. Create task file
 
 Create `docs/tasks/<slug>.md` from the template. Status = `design`. Branch = `main` (placeholder until step 5). No worktree. Mode = `hands-off` if the keyword was present, else `interactive`.
+
+Also append a row to `docs/TODO.md` under `## In flight` (see `## Task index` below). Create `docs/TODO.md` from the empty template if it doesn't exist.
 
 Template:
 
@@ -46,7 +47,7 @@ Template:
 **Mode:** <interactive|hands-off>
 
 ## Design
-<empty — filled by up:udesign>
+<empty — filled by udesign>
 
 ### Invariants
 <empty — IV1, IV2, … : hard constraints that must hold>
@@ -61,13 +62,13 @@ Template:
 <empty — UK1, UK2, … : open questions left to plan / execute; conclusion must report whether each resolved>
 
 ## Plan
-<empty — filled by up:uplan>
+<empty — filled by uplan>
 
 ## Verify
-<empty — filled by up:uverify>
+<empty — filled by uverify>
 
 ## Conclusion
-<empty — filled by up:ureview>
+<empty — filled by ureview>
 
 ### Hands-off decisions
 <empty — populated only when Mode is hands-off>
@@ -90,38 +91,38 @@ Hands-off mode: do not confirm. Default to Medium (full flow) unless the scope i
 
 ### 5. Design stage (unless skipped)
 
-Invoke `up:udesign`. It populates `## Design`, `### Invariants` (IV), `### Principles` (PC), `### Assumptions` (AS), `### Unknowns` (UK), and records `TDD: yes / no (reason)`. Status → `planning`.
+Invoke `udesign`. It populates `## Design`, `### Invariants` (IV), `### Principles` (PC), `### Assumptions` (AS), `### Unknowns` (UK), and records `TDD: yes / no (reason)`. Status → `planning`. Update the task's row in `docs/TODO.md`.
 
 ### 6. Branch & worktree decision
 
 After Design (or immediately for trivial/small tasks), decide:
 
-- Complex / long-running / touches many files → suggest a dedicated branch + worktree. Use `up:git-worktrees`.
+- Complex / long-running / touches many files → suggest a dedicated branch + worktree. Use `git-worktrees`.
 - Easy fix / small scope → suggest working on current branch (usually `main`).
 
 Interactive mode: always confirm with the user.
 
-Hands-off mode: default to the safest reversible option — always a dedicated branch + worktree via `up:git-worktrees`, never direct edits to `main`/`master`. Log the branch name and worktree path under `## Conclusion → ### Hands-off decisions`. The only exception: if `up:git-worktrees` itself fails (e.g. no gitignored worktree path available), log the failure under `### Deferred (needs user input)` and stop — do not silently fall back to working on `main`.
+Hands-off mode: default to the safest reversible option — always a dedicated branch + worktree via `git-worktrees`, never direct edits to `main`/`master`. Log the branch name and worktree path under `## Conclusion → ### Hands-off decisions`. The only exception: if `git-worktrees` itself fails (e.g. no gitignored worktree path available), log the failure under `### Deferred (needs user input)` and stop — do not silently fall back to working on `main`.
 
 If a branch is created, update the task file's `**Branch:**` and `**Worktree:**` headers.
 
 ### 7. Plan stage (unless skipped)
 
-Invoke `up:uplan`. It populates `## Plan`. Status → `executing`.
+Invoke `uplan`. It populates `## Plan`. Status → `executing`. Update the task's row in `docs/TODO.md`.
 
-In hands-off, `up:uplan` auto-proceeds to `up:uexecute` without an approval prompt. It logs `- uplan: plan auto-approved (hands-off)` to `### Hands-off decisions`.
+In hands-off, `uplan` auto-proceeds to `uexecute` without an approval prompt. It logs `- uplan: plan auto-approved (hands-off)` to `### Hands-off decisions`.
 
 ### 8. Execute stage
 
-Invoke `up:uexecute`. Implements the plan, commits incrementally.
+Invoke `uexecute`. Implements the plan, commits incrementally.
 
 ### 9. Verify loop
 
-Invoke `up:uverify`. On failure: `up:uverify` describes how each failure *should* have worked, control returns to `up:uexecute`. Loop until verify passes.
+Invoke `uverify`. On failure: `uverify` describes how each failure *should* have worked, control returns to `uexecute`. Loop until verify passes.
 
 ### 10. Review stage
 
-Status → `reviewing`. Invoke `up:ureview`. It dispatches `up:ureviewer`, processes findings, fills `## Conclusion`. Status → `done`.
+Status → `reviewing`. Invoke `ureview`. It dispatches `ureviewer`, processes findings, fills `## Conclusion`. Status → `done`. Move the task's row in `docs/TODO.md` from `## In flight` to `## Done`.
 
 Once the task is concluded as `done`, run the docs-refresh check (see below).
 
@@ -136,25 +137,42 @@ Then (both modes) present options to the user:
 
 Execute only after the user chooses.
 
+## Task index — `docs/TODO.md`
+
+A rolling index across all `docs/tasks/*.md`. The per-task file is the source of truth; `TODO.md` is a navigation aid so a fresh session can answer "what's open?" without globbing.
+
+Update on:
+- Step 3 — append a new row under `## In flight`
+- Steps 5, 7, 10 (and any branch change in step 6) — update the existing row
+- Step 10 final transition to `done` — move the row from `## In flight` to `## Done`
+
+Row format (one per line, under the appropriate section):
+
+```
+- `<slug>` — <status> — branch `<branch>` — updated YYYY-MM-DD
+```
+
+For `## Done`, the trailing field becomes `concluded YYYY-MM-DD`. Use the absolute date (resolve `today` once per stage). If `docs/TODO.md` is missing, create it from the empty template (`## In flight` and `## Done` headers, both empty).
+
 ## After task is done — docs refresh
 
 Run this once, after Review concludes the task as `done` (not after every stage). Scan the project docs and update them if the work surfaced something they should reflect. Cheap, light-touch; not a full doc pass.
 
 Files to scan:
-- `CLAUDE.md` (project-wide agent guidance)
+- `AGENTS.md` (project-wide agent guidance)
 - `README.md`
 - `docs/**/*.md` (project documentation, excluding the task file itself and archived tasks)
 
 What to look for:
-- New conventions, invariants, or principles that should be global → update `CLAUDE.md`
+- New conventions, invariants, or principles that should be global → update `AGENTS.md`
 - New components, commands, or features the README should mention
 - Stale content contradicted by the stage's work → delete or correct
 - Pointers to the task file if future contributors would benefit
 
 Rules:
 - If nothing needs updating: say so in one line and move on. Do not invent edits.
-- If updates are needed: make them directly, then summarize what changed in 1-3 lines (e.g. "README: fixed install instructions; CLAUDE.md: no change"). Do not prompt for approval first. Do not produce a detailed diff — the user will git-diff if they want.
-- Follow `up:udocument`: lead with why, lists over tables, no aspirational content, kill stale content.
+- If updates are needed: make them directly, then summarize what changed in 1-3 lines (e.g. "README: fixed install instructions; AGENTS.md: no change"). Do not prompt for approval first. Do not produce a detailed diff — the user will git-diff if they want.
+- Follow `udocument`: lead with why, lists over tables, no aspirational content, kill stale content.
 - Do not duplicate content across task file and project docs — pick one home per fact.
 
 ## Stop conditions
@@ -170,15 +188,15 @@ Stop and ask the user when:
 - Never skip Review (both modes)
 - Never auto-merge or auto-push — the user chooses at step 11 (both modes)
 - Never create a worktree without confirming in interactive mode
-- Never edit `main` / `master` directly in hands-off (see `up:handsoff` safety principles)
+- Never edit `main` / `master` directly in hands-off (see `handsoff` safety principles)
 - Keep the task file as the single source of truth — each stage reads it, each stage writes to it
 - External spec / design docs (e.g. anything under `docs/specs/`) are read-only during execute. If a stage finds the spec is wrong, surface it to the user — don't mutate it silently
 - Don't assume prior session memory — the next agent may be a fresh context reading only the task file
-- In hands-off, never invent a default for an ambiguous argument — see `up:handsoff` no-default rule
+- In hands-off, never invent a default for an ambiguous argument — see `handsoff` no-default rule
 
 ## Hands-off mode
 
-Activated by prefixing `/up:make` arguments with the literal token `handsoff`. The full contract — safety principles (worktree-first, reversible-first, no destructive ops, no push), decision log format, deferred log, no-default rule, end-of-task summary — lives in `up:handsoff`. Read that skill once when the task file's `**Mode:**` header is `hands-off`; the references in step 4, step 6, step 7, step 11 above are the stage-specific touches on top of it.
+Activated by prefixing `/make` arguments with the literal token `handsoff`. The full contract — safety principles (worktree-first, reversible-first, no destructive ops, no push), decision log format, deferred log, no-default rule, end-of-task summary — lives in `handsoff`. Read that skill once when the task file's `**Mode:**` header is `hands-off`; the references in step 4, step 6, step 7, step 11 above are the stage-specific touches on top of it.
 
 ## Terminal state
 

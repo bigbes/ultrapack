@@ -53,5 +53,5 @@ Perform the write in the main session by appending to the chosen file or creatin
 - Subagent drafts from visible context and repo state; main session asks and writes.
 - Concrete: exact commands, exact paths, exact error messages.
 - Terse: bullets over prose. No filler.
-- Include only info that can't be derived from code or git history. Don't restate `AGENTS.md` or `CLAUDE.md`.
+- Include only info that can't be derived from code or git history. Don't restate `AGENTS.md`.
 - Never write without confirmation.

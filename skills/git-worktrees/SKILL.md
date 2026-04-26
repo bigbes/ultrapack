@@ -16,7 +16,7 @@ Worktrees let you work on multiple branches simultaneously without stashing or s
 1. `.worktrees/` exists → use it
 2. `worktrees/` exists → use it
 3. Both exist → `.worktrees/` wins
-4. Neither exists → check `AGENTS.md` and then `CLAUDE.md` for a preference (grep `worktree.*director`); if present, use it
+4. Neither exists → check `AGENTS.md` for a preference (grep `worktree.*director`); if present, use it
 5. Still nothing → ask the user: project-local `.worktrees/` or a global path?
 </priority>
 

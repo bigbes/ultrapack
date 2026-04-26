@@ -1,122 +1,113 @@
 # ultrapack
 
-Ultrapack or `/up:` is an opinionated Claude Code skill pack for developers: plan-driven, git-centered, minimalistic. Built around frequently clearing context and using one conversation for one feature. 
+Opinionated [OpenCode](https://opencode.ai) skill pack for developers: plan-driven, git-centered, minimalistic. Built around frequently clearing context and using one conversation per feature.
 
 ## TL;DR
 
 ```
-/up:make fix the flaky login test
+/make fix the flaky login test
 ```
 
-Will take you through the process: design → plan → execute → verify → review → update docs.
+Walks you through Design → Plan → Execute → Verify → Review → docs refresh.
 
-Each stage populates `docs/tasks/<slug>.md`. The task file is the source of truth — any fresh agent can read it and resume from wherever the last one stopped.
-
+Each stage populates `docs/tasks/<slug>.md`. The task file is the source of truth — any fresh agent can read it and resume from wherever the last one stopped. `docs/TODO.md` is a rolling index across tasks.
 
 ```
-/up:make handsoff fix the flaky login test
+/make handsoff fix the flaky login test
 ```
 
-Same, but ask you as few questions as possible. 
-
-While you are not looking, the agent will pick the safest and most conservative choices: don't delete things (copy and rename instead), work in a git branch, don't introduce silent defaults and fallbacks, fix only critical and important issues. 
+Same, but ask as few questions as possible. The agent picks the safest, most reversible choices: don't delete things (copy and rename instead), work in a git branch, no silent defaults, fix only critical issues.
 
 Core ideas:
 - One file per task. `docs/tasks/<slug>.md` evolves through Design → Plan → Verify → Conclusion.
-- Invariants-, principles-, and assumptions-first. Discovered in design, obeyed in plan, checked at review. Short IDs (IV, PC, AS, UK, PH, RK, CK) let later sections reference them without re-quoting.
-- Per-phase subagent implementation. Each plan phase dispatched to a fresh `up:implementer`. Plan declares interfaces (`### Interfaces`) and an execution graph (`### Interface graph`); the executor topo-sorts it into waves and dispatches independent phases in parallel.
-- Mandatory manual testing. Agent must run what it built before claiming done.
-- As short as I could make it, doesn't waste tokens.
+- Invariants-, principles-, and assumptions-first. Discovered in design, obeyed in plan, checked at review. Short IDs (IV, PC, AS, UK) let later sections reference them without re-quoting.
+- Per-phase subagent implementation. Each plan phase dispatched to a fresh `@implementer`. Plan declares interfaces (`### Interfaces`) and an execution graph (`### Interface graph`); the executor topo-sorts it into waves and dispatches independent phases in parallel.
+- Mandatory manual testing. Agent runs what it built before claiming done.
+- As short as I could make it. Doesn't waste tokens.
 
 ## Install
 
-### Claude Code
+OpenCode reads from `.opencode/` (per-project) or `~/.config/opencode/` (global). This repo's directory layout (`agents/`, `commands/`, `skills/`, `references/`) maps directly into either location.
 
-Add the repo as a marketplace and install the plugin:
-
-```
-/plugin marketplace add btseytlin/ultrapack
-/plugin install up@ultrapack
-```
-
-Then `/reload-plugins`. Verify with `/up:make` or by listing skills.
-
-### OpenCode
-
-Generate the OpenCode layer:
+### Per-project
 
 ```bash
-python3 scripts/generate-opencode.py
+git clone https://github.com/bigbes/ultrapack.git /tmp/ultrapack
+cd your-project
+mkdir -p .opencode
+cp -r /tmp/ultrapack/{agents,commands,skills,references} .opencode/
+rm -rf /tmp/ultrapack
 ```
 
-OpenCode reads the generated files from `.opencode/`:
+### Global (recommended — installs once, works everywhere)
 
-- Commands: `/make`, `/try`, `/step-back`, `/summary`, `/reflect`, `/explain-diff`
-- Agents: `@explorer`, `@implementer`, `@researcher`, `@reviewer`, `@summarizer`, `@librarian`, `@finder`, `@oracle`, `@diff-explainer`
-- Skills: `.opencode/skills/*/SKILL.md`
+```bash
+git clone https://github.com/bigbes/ultrapack.git ~/.local/share/ultrapack
+mkdir -p ~/.config/opencode/{agents,commands,skills,references}
+ln -sfn ~/.local/share/ultrapack/agents/*     ~/.config/opencode/agents/
+ln -sfn ~/.local/share/ultrapack/commands/*   ~/.config/opencode/commands/
+ln -sfn ~/.local/share/ultrapack/skills/*     ~/.config/opencode/skills/
+ln -sfn ~/.local/share/ultrapack/references/* ~/.config/opencode/references/
+```
 
-Claude remains the source format. Edit `plugins/up/` and regenerate instead of hand-editing generated OpenCode files.
+To upgrade: `git -C ~/.local/share/ultrapack pull`. Symlinks pick up changes automatically.
+
+### Verify
+
+Open OpenCode in any project and run `/make a quick smoke test` — it should kick off the design stage.
 
 ## Design
 
-Ultrapack is a small set of skills, commands, and agents to help Claude Code handle non-trivial work. 
+Inspired by [feature-dev](https://github.com/anthropics/claude-code/tree/main/plugins/feature-dev) and [obra/superpowers](https://github.com/obra/superpowers). Feature-dev is too barebones; superpowers is great but builds huge plans with duplication and is geared to a specific style of dev work. Ultrapack takes the best of both, shortened and simplified.
 
-Inspired by [feature-dev](https://github.com/anthropics/claude-code/tree/main/plugins/feature-dev) and [obra/superpowers](https://github.com/obra/superpowers). [feature-dev](https://github.com/anthropics/claude-code/tree/main/plugins/feature-dev) is too barebones. [obra/superpowers](https://github.com/obra/superpowers) is great, but creates huge plans with a lot of work duplication, changes too frequently and is geared to a specific type of dev work. Also it's a chore to type "superpowers" every time.
+The whole workflow updates one markdown file per task — `docs/tasks/<slug>.md` with sections Design, Plan, Verify, Conclusion — and tracks all of them in `docs/TODO.md`. It's git-centered: worktrees by default for parallel work, incremental commits for easier rollback and review.
 
-Ultrapack is the best of both, shortened and simplified. The whole workflow is built around updating one markdown file per task `docs/tasks/<slug>.md` with sections Design, Plan, Verify, Conclusion. It's also git centered: use worktrees by default for easier parallel work, incremental commits for easier rollback and review.
+Each stage is a skill. `/make` orchestrates the flow:
 
-Each stage of task planning and execution is a skill. `/up:make` is a helper command that orchestrates the whole flow. 
+- `udesign` — discuss tradeoffs, discover **invariants** (hard constraints, e.g. "class Player must not access internals of class Enemy"), **principles** (softer guidance like "prefer composition over inheritance"), **assumptions** (unverified premises the design rests on; the Conclusion reports whether each held), and **unknowns** (open questions to resolve during plan/execute). Writes the initial spec to the task file.
+- `uplan` — populate the task file with a concrete plan: files to change, classes/methods to update or create, interfaces, test strategy, phase breakdown, execution order. No code blocks unless especially tricky.
+- `uexecute` — create branch + worktree, dispatch independent `@implementer` agents per plan phase, incremental commits, plan/design checks between phases. The plan's `### Interface graph` is topo-sorted into waves; phases in the same wave run in parallel (implementers stage; dispatcher commits serially in phase order). Boundary check after each commit (diff ⊆ declared `Owns` paths). Wiring check after the final wave (per-IF caller/anchor match). Uses TDD when helpful.
+- `uverify` — manual smoke test from a positive/negative/invariant checklist. Writes summary to task file. Loops back to execute on failure.
+- `ureview` — dispatch `@reviewer` (independent, knows design/plan/diff but not implementer's rationale). Confidence-filtered (≥80), severity-tiered. Fills the Conclusion. Then refreshes project docs.
 
-`up:udesign` is the first stage: discuss trade-offs with the user, discover invariants (specific things that must hold, e.g. "class Player must not access internals of class Enemy"), principles (softer guidance, like "prefer composition over inheritance"), assumptions (unverified premises the design rests on — the Conclusion reports whether each held), and unknowns (open questions to resolve during plan/execute). Prepare initial spec in the task file.
-
-`up:uplan` populate the task file with a specific plan. Define what files to change, what classes and methods to update or create, what interfaces they will have, what is the test strategy, break down into phases, define order of execution. No code blocks here unless they are especially tricky. 
-
-`up:uexecute` create git branch and worktree, dispatch independent `up:implementer` agents per plan phase, make incremental commits, check against plan and design between phases. When the plan declares `### Interface graph`, the executor topo-sorts the graph into waves; phases in the same wave are dispatched in parallel (implementers stage changes, dispatcher commits serially in phase order). After each phase's commit: Boundary check (diff ⊆ declared `@` paths). After the final wave: Wiring check (per-IF caller/anchor match). Uses TDD for tasks where it's helpful.
-
-`up:uverify` performs manual smoke testing, defining a checklist of fast positive (what should work) and negative (what should not work) checks based on invariants. Writes summary to task file. Loops back to execute on failure. 
-
-`up:ureview` dispatches an independent `up:reviewer` subagent that knows the design, plan, and changes. It doesn't know the implementer's rationale. In the end it's an independent review: check that all invariants from design and plan still hold and find bugs. 
-
-Finally, the conclusion section of the task markdown file is populated. Then all documentation of the project is updated.
-
-## Details
+## Components
 
 ### Skills
 
-Process skills (u-prefixed to dodge Claude Code built-ins):
-- `up:udesign` — Brainstorm requirements, populate Design + Invariants + Principles + Assumptions + Unknowns, decide whether to use TDD.
-- `up:uplan` — Plan: what files to change, what class/methods and with what interfaces, test strategy, order. Only non-trivial code blocks.
-- `up:uexecute` — Dispatch `up:implementer` per phase (parallel waves derived from `### Interface graph`), incremental commits, Boundary + plan-diff + consistency sweep per phase, Wiring check after the final wave.
-- `up:uverify` — Positive + negative + invariant checklist, manual smoke test, writes summary to task file, loops back to execute on failure.
-- `up:ureview` — Dispatch `up:reviewer` subagent: independent review, check that all invariants from design and plan still hold.
-- `up:udebug` — Four-phase root-cause investigation.
-- `up:udocument` — Guidance for updating docs, CLAUDE.md, READMEs, in-code comments.
+Process skills (u-prefixed to dodge built-ins):
+- `udesign` — Brainstorm requirements, populate Design + Invariants + Principles + Assumptions + Unknowns, decide TDD.
+- `uplan` — Plan: files, classes/methods, interfaces, test strategy, order. Non-trivial code blocks only.
+- `uexecute` — Dispatch `@implementer` per phase (parallel waves from `### Interface graph`), incremental commits, boundary + plan-diff + consistency sweep per phase, wiring check after the final wave.
+- `uverify` — Positive + negative + invariant checklist, manual smoke test, writes summary, loops back on failure.
+- `ureview` — Dispatch `@reviewer`: independent review, check that all invariants/assumptions still hold.
+- `udebug` — Four-phase root-cause investigation.
+- `udocument` — Guidance for updating docs, AGENTS.md, READMEs, in-code comments.
 
 Discipline skills:
-- `up:test-driven-development` — write failing test → make change → test passes.
-- `up:git-worktrees` — guidance for using git worktrees.
-- `up:handsoff` — Shared contract for hands-off mode (activated via `/up:make handsoff <description>`): safety principles, decision log, no-default rule, end-of-task summary. Referenced by `/up:make` and every process skill.
+- `test-driven-development` — Failing test → make change → test passes.
+- `git-worktrees` — Worktree conventions.
+- `handsoff` — Shared contract for hands-off mode (`/make handsoff <description>`): safety principles, decision log, no-default rule, end-of-task summary.
 
 ### Commands
 
-- `/up:make [handsoff] <description>` — Orchestrate the full flow: task file → design → branch → plan → execute → verify → review → update docs.
-- `/up:try` — Design one positive and one negative test case, run both, report.
-- `/up:step-back` — Circuit breaker: stop, diagnose why approaches failed, propose new direction.
-- `/up:summary` — Produce a summary so another session can continue with zero context.
-- `/up:reflect` — Reflect on the dialogue, extract learnings into CLAUDE.md / memory / docs.
-- `/explain-diff` (OpenCode) — Explain a diff by behavior and review order.
+- `/make [handsoff] <description>` — Orchestrate the full flow: task file → design → branch → plan → execute → verify → review → docs refresh.
+- `/try` — Design one positive and one negative test case, run both, report.
+- `/step-back` — Circuit breaker: stop, diagnose why approaches failed, propose new direction.
+- `/summary` — Produce a handoff summary so another session can continue with zero context.
+- `/reflect` — Reflect on the dialogue, extract learnings into AGENTS.md / docs.
+- `/explain-diff` — Explain a diff by behavior and review order.
 
 ### Agents
 
-- `up:explorer` (Haiku 4.5) — Codebase tracing, file:line refs, 3–5 essential files.
-- `up:implementer` (Sonnet 4.6) — One phase: code + tests + commit + self-review. Receives `Owns` / `Implements` / `Consumes` from the plan's interface graph. `commit: self|defer` mode; defer stages only and the dispatcher commits (used in parallel waves). Fresh context per dispatch.
-- `up:reviewer` (Sonnet 4.6) — Independent review against Plan + Invariants + Assumptions. Confidence-filtered (≥80), severity-tiered.
-- `up:researcher` (Sonnet 4.6) — General-purpose investigation: decompose + systematically answer.
-- `up:summarizer` (Sonnet 4.6) — Drafts the handoff prose for `/up:summary`; gathers repo state, never writes to disk.
-- `librarian` (OpenCode) — Deep multi-repo/source archaeology, commit-history context, and architecture explanations.
-- `finder` (OpenCode) — Fast file and line-range discovery, no architecture essay.
-- `oracle` (OpenCode) — Senior engineering advisor for architecture, planning, debugging strategy, and tradeoffs.
-- `diff-explainer` (OpenCode) — Behavior-first diff walkthrough, not a defect review.
+- `@explorer` — Codebase tracing, file:line refs, 3–5 essential files.
+- `@implementer` — One phase: code + tests + commit + self-review. Receives `Owns`/`Implements`/`Consumes` from the plan's interface graph. `commit: self|defer` mode (defer for parallel waves; dispatcher commits serially). Fresh context per dispatch.
+- `@reviewer` — Independent review against Plan + Invariants + Assumptions. Confidence-filtered (≥80), severity-tiered.
+- `@researcher` — Decompose a query, investigate systematically.
+- `@summarizer` — Drafts the handoff prose for `/summary`; gathers repo state, never writes.
+- `@librarian` — Deep multi-repo/source archaeology, commit-history context, architecture explanations.
+- `@finder` — Fast file and line-range discovery, no architecture essay.
+- `@oracle` — Senior engineering advisor for architecture, planning, debugging strategy, tradeoffs.
+- `@diff-explainer` — Behavior-first diff walkthrough.
 
 ## License
 

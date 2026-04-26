@@ -1,6 +1,6 @@
 ---
 name: udocument
-description: Use when writing or editing documentation — project docs, CLAUDE.md, READMEs, SKILL.md, docstrings, inline comments. Auto-triggers on `.md` files and docstring edits. Enforces lead-with-why, kill stale content, lists over tables, no aspirational sentences.
+description: Use when writing or editing documentation — project docs, AGENTS.md, READMEs, SKILL.md, docstrings, inline comments. Auto-triggers on `.md` files and docstring edits. Enforces lead-with-why, kill stale content, lists over tables, no aspirational sentences.
 ---
 
 # Document
@@ -10,7 +10,7 @@ Documentation is code's second user-facing surface. Treat it with the same care.
 ## Scope — when this skill applies
 
 - Project documentation (`README.md`, `docs/**/*.md`)
-- AGENTS.md / CLAUDE.md / GEMINI.md instructions
+- AGENTS.md instructions
 - SKILL.md files for skill packs
 - In-code docstrings (classes, modules)
 - Inline code comments
@@ -38,7 +38,7 @@ Documentation is code's second user-facing surface. Treat it with the same care.
 
 Keep READMEs under 200 lines. More than that → split into `docs/`.
 
-## AGENTS.md / CLAUDE.md — project-wide agent guidance
+## AGENTS.md — project-wide agent guidance
 
 - Principles and constraints that apply across the project
 - One-line style preferences ("no markdown tables unless asked")

@@ -8,7 +8,7 @@ Snapshot of the model landscape and routing decisions as of **April 2026**, kept
 - **DeepSeek V4-Flash** → `@implementer`, `@researcher`, `@rush`
 - **Kimi K2.6** → `@librarian`, `@smart`
 - **GPT-5.5** (via openai) → `@reviewer`, `@oracle`, `@deep`
-- **Gemini 3 Flash** (via google) → `@look-at`
+- **Gemini 3 Flash** (via opencode) → `@look-at`
 
 Tier philosophy: cheap by default; premium reserved for the two roles where autonomous deep reasoning has the highest payoff and the lowest call volume (review, advisory). The three personality agents (`@rush`/`@smart`/`@deep`) are general-purpose dispatch targets — they share each tier with a specialised agent rather than introducing a new tier. `@look-at` is the only agent on a vision-capable model; it carries Amp's "look at" role for images, diagrams, and PDFs.
 
@@ -73,4 +73,4 @@ What pays for what (as of April 2026):
 - **kimi-for-coding** — Kimi K2.6 (`k2p6`); Moonshot's coding-tier subscription.
 - **deepseek** (direct) — V4-Flash, V4-Pro (1M context tier; aggressive cache pricing $0.145/M cache hit).
 - **openai** (direct) — GPT-5.4 / 5.5 family, including `-fast` and `-mini` / `-mini-fast` sizings (premium-tier exception path).
-- **google** (AI Studio / Gemini API) — Gemini 3 Flash (vision-capable; the only vision-native model in the routing).
+- **opencode** — Gemini 3 Flash (vision-capable; the only vision-native model in the routing).

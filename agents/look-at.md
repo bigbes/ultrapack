@@ -1,6 +1,6 @@
 ---
 description: Visual analyzer — describes images, screenshots, diagrams, and PDFs, and compares files. Read-only. Dispatch when the main agent needs to "see" a file rather than just read its bytes.
-model: google/gemini-3-flash
+model: opencode/gemini-3-flash
 mode: subagent
 permission:
   edit: deny

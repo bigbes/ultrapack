@@ -60,7 +60,7 @@ Each agent declares its own `model:` in frontmatter, so the matching providers m
 - `deepseek` — for DeepSeek V4-Flash (`@implementer`, `@researcher`, `@rush`)
 - `kimi-for-coding` — for Kimi K2.6 (`@librarian`, `@smart`)
 - `openai` — for GPT-5.5 (`@reviewer`, `@oracle`, `@deep`)
-- `google` — for Gemini 3 Flash (`@look-at`)
+- `opencode` — for Gemini 3 Flash (`@look-at`)
 
 If a provider isn't configured, the affected agent fails loud rather than silently falling back to a different model. Rationale and alternatives in [`docs/models.md`](docs/models.md).
 

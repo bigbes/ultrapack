@@ -1,6 +1,6 @@
 ---
 description: Thorough general-purpose executor — uses @oracle for hard structural calls, runs tools in parallel, verifies via build/lint/test. Dispatch when the task is complex, multi-file, or carries real risk.
-model: opencode-zen/gpt-5.5
+model: openai/gpt-5.5
 mode: subagent
 permission:
   edit: ask

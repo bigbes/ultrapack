@@ -56,10 +56,10 @@ To upgrade: `git -C ~/.local/share/ultrapack pull`. Symlinks pick up changes aut
 
 Each agent declares its own `model:` in frontmatter, so the matching providers must be configured in your `opencode.json`:
 
-- `zhipuai` — for GLM-5.1 (`@explorer`, `@finder`, `@summarizer`, `@diff-explainer`)
+- `zai-coding-plan` — for GLM-5.1 (`@explorer`, `@finder`, `@summarizer`, `@diff-explainer`)
 - `deepseek` — for DeepSeek V4-Flash (`@implementer`, `@researcher`, `@rush`)
-- `moonshot` — for Kimi K2.6 (`@librarian`, `@smart`)
-- `opencode-zen` — for GPT-5.5 (`@reviewer`, `@oracle`, `@deep`)
+- `kimi-for-coding` — for Kimi K2.6 (`@librarian`, `@smart`)
+- `openai` — for GPT-5.5 (`@reviewer`, `@oracle`, `@deep`)
 - `google` — for Gemini 3 Flash (`@look-at`)
 
 If a provider isn't configured, the affected agent fails loud rather than silently falling back to a different model. Rationale and alternatives in [`docs/models.md`](docs/models.md).

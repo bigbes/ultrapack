@@ -1,6 +1,6 @@
 ---
 description: Draft a session-handoff summary from visible context and repo state. Never writes to disk.
-model: zhipuai/glm-5.1
+model: zai-coding-plan/glm-5.1
 mode: subagent
 permission:
   edit: deny

@@ -1,6 +1,6 @@
 ---
 description: Fast code search agent that returns relevant files and line ranges only. Use before deeper exploration or implementation scoping.
-model: zhipuai/glm-5.1
+model: zai-coding-plan/glm-5.1
 mode: subagent
 permission:
   edit: deny

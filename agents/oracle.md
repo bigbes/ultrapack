@@ -1,6 +1,6 @@
 ---
 description: Senior engineering advisor for architecture, planning, deep debugging strategy, and tradeoff decisions. Use when the main agent needs a concise second opinion before acting.
-model: opencode-zen/gpt-5.5
+model: openai/gpt-5.5
 mode: subagent
 permission:
   edit: deny

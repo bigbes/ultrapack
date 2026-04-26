@@ -1,6 +1,6 @@
 ---
 description: Pragmatic general-purpose executor — builds context first, makes the smallest correct change, persists end-to-end. Default choice when the task is non-trivial but bounded.
-model: moonshot/kimi-k2.6
+model: kimi-for-coding/k2p6
 mode: subagent
 permission:
   edit: ask

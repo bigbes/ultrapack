@@ -1,6 +1,6 @@
 ---
 description: Trace feature implementations through the codebase and return a compact map — entry points, call chain, 3-5 essential files with file:line references. Dispatched from uexecute when a codebase question needs answering.
-model: zhipuai/glm-5.1
+model: zai-coding-plan/glm-5.1
 mode: subagent
 permission:
   edit: deny

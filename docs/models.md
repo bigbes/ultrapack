@@ -7,7 +7,7 @@ Snapshot of the model landscape and routing decisions as of **April 2026**, kept
 - **GLM-5.1** → `@explorer`, `@finder`, `@summarizer`, `@diff-explainer`
 - **DeepSeek V4-Flash** → `@implementer`, `@researcher`, `@rush`
 - **Kimi K2.6** → `@librarian`, `@smart`
-- **GPT-5.5** (via opencode-zen) → `@reviewer`, `@oracle`, `@deep`
+- **GPT-5.5** (via openai) → `@reviewer`, `@oracle`, `@deep`
 - **Gemini 3 Flash** (via google) → `@look-at`
 
 Tier philosophy: cheap by default; premium reserved for the two roles where autonomous deep reasoning has the highest payoff and the lowest call volume (review, advisory). The three personality agents (`@rush`/`@smart`/`@deep`) are general-purpose dispatch targets — they share each tier with a specialised agent rather than introducing a new tier. `@look-at` is the only agent on a vision-capable model; it carries Amp's "look at" role for images, diagrams, and PDFs.
@@ -52,7 +52,7 @@ Treat SWE-Bench Verified as **directional only** — OpenAI retired it in Februa
 - **Qwen3.6-Plus for `@librarian`** — 1M context (4× Kimi K2.6), $0.33/$1.95. Rejected for v1 because closed-weight, not in current subscription set, and 256K covers almost all real archaeology cases. Hold as fallback if Kimi truncates on a real query.
 - **Codestral 22B for any FIM/autocomplete role** — N/A in this pack; we don't ship an autocomplete agent. If we ever do, Codestral 22B (95.3% FIM pass@1) or Qwen 2.5-Coder are the picks. Qwen 3.5+ does not support FIM — common gotcha.
 - **Gemini 3.1 Pro for `@reviewer`** (Amp's choice) — rejected in favor of GPT-5.5 because OMO's framing puts autonomous bug-hunting in GPT's wheelhouse. Could swap if GPT-5.5 reviews feel mechanical or miss subtle bugs.
-- **Opus 4.7 for `@oracle`** — equivalent to GPT-5.5 in capability; OMO listed Opus as a viable fallback. Picked GPT-5.5 to keep the premium tier on a single provider (opencode-zen) and reduce config surface.
+- **Opus 4.7 for `@oracle`** — equivalent to GPT-5.5 in capability; OMO listed Opus as a viable fallback. Picked GPT-5.5 to keep the premium tier on a single provider (openai) and reduce config surface.
 
 ## Revisit triggers
 
@@ -69,9 +69,8 @@ Revisit this routing when **any** of these change:
 
 What pays for what (as of April 2026):
 
-- **opencode-go** — GLM-5.1, Kimi K2.6, DeepSeek V4-Flash (gateway; cheapest sustained pricing for these)
-- **Zhipu (direct)** — GLM-5.1 (alternative path; GLM Coding Plan if heavy use)
-- **Moonshot (direct)** — Kimi K2.6 (alternative path)
-- **DeepSeek (direct)** — V4-Flash, V4-Pro (1M context tier; aggressive cache pricing $0.145/M cache hit)
-- **opencode-zen** — GPT-5.5 (premium-tier exception path; also covers Opus 4.7 / Gemini 3.1 Pro if needed for swap)
-- **google** (AI Studio / Gemini API) — Gemini 3 Flash (vision-capable; the only vision-native model in the routing)
+- **zai-coding-plan** — GLM family (`glm-4.5-air`, `glm-4.7`, `glm-5-turbo`, `glm-5.1`); GLM Coding Plan if heavy use.
+- **kimi-for-coding** — Kimi K2.6 (`k2p6`); Moonshot's coding-tier subscription.
+- **deepseek** (direct) — V4-Flash, V4-Pro (1M context tier; aggressive cache pricing $0.145/M cache hit).
+- **openai** (direct) — GPT-5.4 / 5.5 family, including `-fast` and `-mini` / `-mini-fast` sizings (premium-tier exception path).
+- **google** (AI Studio / Gemini API) — Gemini 3 Flash (vision-capable; the only vision-native model in the routing).

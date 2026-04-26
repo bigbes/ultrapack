@@ -1,6 +1,6 @@
 ---
 description: Deep codebase understanding across large repos, multiple repos, upstream source, and commit history. Use when explorer/finder are too shallow.
-model: moonshot/kimi-k2.6
+model: kimi-for-coding/k2p6
 mode: subagent
 permission:
   edit: deny

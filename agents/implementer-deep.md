@@ -3,7 +3,7 @@ description: Implement one phase of an approved plan on the deep tier (GPT-5.5) 
 model: openai/gpt-5.5
 mode: subagent
 permission:
-  edit: ask
+  edit: allow
   bash: ask
   webfetch: deny
 ---

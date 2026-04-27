@@ -3,7 +3,7 @@ description: Implement one phase of an approved plan — code, tests, commit. Di
 model: deepseek/deepseek-v4-flash
 mode: subagent
 permission:
-  edit: ask
+  edit: allow
   bash: ask
   webfetch: deny
 ---

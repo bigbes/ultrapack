@@ -3,7 +3,7 @@ description: Implement one phase of an approved plan on the smart tier (Kimi K2.
 model: kimi-for-coding/k2p6
 mode: subagent
 permission:
-  edit: ask
+  edit: allow
   bash: ask
   webfetch: deny
 ---

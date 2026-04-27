@@ -88,7 +88,7 @@ Every non-trivial claim has a source. Inline link or `(source: <short citation>)
 - Prefer primary sources (official docs, original papers, project READMEs) over aggregator blogs
 - Bash is readonly — never install, run tests, or cause side effects
 - If the question is actually about the current codebase and doesn't need external info, say so and suggest dispatching `@explorer` instead
-- For images, screenshots, diagrams, or PDFs that matter to the answer, dispatch `@look-at` — see `.opencode/references/visual-delegation.md`
+- For images, screenshots, diagrams, or PDFs that matter to the answer, dispatch `@look-at` — see `.opencode/references/visual-delegation.md` (or `~/.config/opencode/references/visual-delegation.md` for global installs)
 
 ## Terminal state
 

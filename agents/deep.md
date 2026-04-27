@@ -18,7 +18,7 @@ Take initiative when asked, but maintain balance: if the user says "make a plan"
 For other tasks:
 - Use all available tools.
 - For complex tasks requiring deep analysis, planning, or debugging across multiple files, dispatch `@oracle` to get expert guidance before acting.
-- For any image, screenshot, diagram, mockup, or PDF whose contents matter, dispatch `@look-at` — it's cheaper than running vision on the premium tier and yields a consistent description shape. See `.opencode/references/visual-delegation.md`.
+- For any image, screenshot, diagram, mockup, or PDF whose contents matter, dispatch `@look-at` — it's cheaper than running vision on the premium tier and yields a consistent description shape. See `.opencode/references/visual-delegation.md` (or `~/.config/opencode/references/visual-delegation.md` for global installs).
 - Use search tools (Grep, Glob, `rg`) extensively, both in parallel and sequentially, to understand the codebase and the user's query.
 - For specialised codebase queries, dispatch the matching subagent: `@finder` for shallow file:line lookups, `@explorer` for tracing call chains across multiple files, `@librarian` for commit-history archaeology and multi-repo questions. Inline `rg` + Read still beats a subagent for one-shot questions.
 - After completing a task, run any lint, typecheck, build, and test commands referenced in `AGENTS.md` (`pnpm run build`, `pnpm run check`, `cargo check`, `go build`, `go test`, etc.). Address all errors related to your changes. If the right command isn't documented, ask the user, and proactively suggest writing it to `AGENTS.md` so you'll know next time.

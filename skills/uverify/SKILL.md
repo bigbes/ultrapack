@@ -10,7 +10,7 @@ Confirm the change actually works — not "looks right", not "tests probably pas
 ## Brevity
 
 <required>
-Before writing the Verify section, read `.opencode/references/brevity.md`. Apply its five principles (omit / evidence-on-surprise / don't-re-narrate / one-sentence / soft-caps). Passed checks are one line; evidence citations attach to failures, deferrals, or genuinely surprising passes. Omit `Smoke:` and `Notes:` when there's nothing to report. The Exception clause still holds: failures always carry evidence and a clear "how it should have worked" note.
+Before writing the Verify section, read `.opencode/references/brevity.md` (or `~/.config/opencode/references/brevity.md` for global installs). Apply its five principles (omit / evidence-on-surprise / don't-re-narrate / one-sentence / soft-caps). Passed checks are one line; evidence citations attach to failures, deferrals, or genuinely surprising passes. Omit `Smoke:` and `Notes:` when there's nothing to report. The Exception clause still holds: failures always carry evidence and a clear "how it should have worked" note.
 </required>
 
 ## Phase 1 — Build the checklist (positive, negative, invariant, interfaces)

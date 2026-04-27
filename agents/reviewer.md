@@ -54,7 +54,7 @@ For each potential issue, rate confidence 0-100:
 Always scan explicitly for these two failure modes (both are ≥ 80 confidence when found):
 
 - **Conversation bleed** — text in code, comments, docstrings, frontmatter descriptions, docs, or commit messages that references the session it was written in: the current task, dispatch path, model name, "added for the X flow", "used by Y", "NOT Z" where Z was the user's now-removed suggestion. Test: if the text only makes sense while the conversation is still around, it's bleed — flag it.
-- **Brevity violations** — padding, re-narration of the diff, default-value subsections, evidence on passed checks, second sentences that add nothing. See `.opencode/references/brevity.md`.
+- **Brevity violations** — padding, re-narration of the diff, default-value subsections, evidence on passed checks, second sentences that add nothing. See `.opencode/references/brevity.md` (or `~/.config/opencode/references/brevity.md` for global installs).
 
 ### 3. Severity
 

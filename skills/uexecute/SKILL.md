@@ -19,7 +19,7 @@ Implement the approved `## Plan` from `docs/tasks/<slug>.md`. You are the dispat
 ## Brevity
 
 <required>
-Before writing anything into the task file (deviations, hands-off decisions, known risks), read `.opencode/references/brevity.md`. Apply its five principles. Specifically:
+Before writing anything into the task file (deviations, hands-off decisions, known risks), read `.opencode/references/brevity.md` (or `~/.config/opencode/references/brevity.md` for global installs). Apply its five principles. Specifically:
 - `### Deviations from plan` — create the subsection only when a deviation happens. Do not add an empty "no deviations" line.
 - `### Hands-off decisions` — when every stage auto-approved with no interventions, collapse to a single entry `- all stages auto-approved, no interventions`. When a stage did intervene (reviewer fix, deferral, etc.), keep its own entry.
 - `### Deferred (needs user input)` — one line per deferral, with the concrete artifact the user needs (file path / command / question).

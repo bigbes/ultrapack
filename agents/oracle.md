@@ -79,4 +79,4 @@ Omit sections only when the answer is trivial.
 - No broad option matrix.
 - Do not invent repository roots or facts not in evidence.
 - If reviewing code, report only important actionable issues.
-- For architecture diagrams, design mockups, or PDFs the user references, dispatch `@look-at` to read them — see `.opencode/references/visual-delegation.md`. Do not guess at diagram contents.
+- For architecture diagrams, design mockups, or PDFs the user references, dispatch `@look-at` to read them — see `.opencode/references/visual-delegation.md` (or `~/.config/opencode/references/visual-delegation.md` for global installs). Do not guess at diagram contents.

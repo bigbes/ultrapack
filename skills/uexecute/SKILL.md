@@ -1,6 +1,6 @@
 ---
 name: uexecute
-description: Use to implement an approved plan. Dispatches the @implementer agent per phase on the configured implementation model. Runs plan-diff check and consistency sweep after each phase. Forbids silent fallbacks and mutation of external spec/design docs. Dispatches the planner skill when deviations invalidate the plan.
+description: Use to implement an approved plan. Dispatches @implementer / @implementer-smart / @implementer-deep per phase based on each phase's `Tier:` field (rush | smart | deep, default rush). Runs plan-diff check and consistency sweep after each phase. Forbids silent fallbacks and mutation of external spec/design docs. Dispatches the planner skill when deviations invalidate the plan.
 ---
 
 # Execute
@@ -70,7 +70,13 @@ Parallelism comes only from the Plan's `### Interface graph` via the wave schedu
 
 ## Dispatch per phase
 
-Each phase runs in a fresh `@implementer` subagent (the configured implementation model). You (the dispatcher, in the primary agent) coordinate.
+Each phase runs in a fresh implementer subagent. Pick the variant by the phase's `Tier:` field from the plan:
+
+- `Tier: rush` (or omitted) → `@implementer` (DeepSeek V4-Flash).
+- `Tier: smart` → `@implementer-smart` (Kimi K2.6).
+- `Tier: deep` → `@implementer-deep` (GPT-5.5).
+
+All three share the same prompt, contract, and report format — only the model differs. You (the dispatcher, in the primary agent) coordinate.
 
 <required>
 **Pass in the dispatch prompt:**
@@ -126,7 +132,7 @@ Parse each line of the form `PH<N>  <consumes-CSV> -> <produces-CSV>   @ <paths-
 Before dispatching a wave, verify that the `@` sets of all phases in that wave are pairwise disjoint. On overlap: halt, log the conflicting paths under `### Deferred (needs user input)`, do not dispatch.
 
 **Dispatching a wave:**
-Fire one `@implementer` per phase in the wave as concurrent `Agent` tool calls in a single response (AS1). Pass `commit: defer` to each (AS3 — only the dispatcher touches git in defer mode). Include `Owns`, `Implements`, `Consumes` from the graph line (IF3).
+Fire one implementer per phase in the wave as concurrent `Agent` tool calls in a single response (AS1). Pick each phase's variant by its `Tier:` (see "Dispatch per phase" above) — different phases in the same wave can run on different tiers. Pass `commit: defer` to each (AS3 — only the dispatcher touches git in defer mode). Include `Owns`, `Implements`, `Consumes` from the graph line (IF3).
 
 **Serialized commit protocol:**
 After all `Agent` calls in the response return, process successful implementers in ascending PH order:

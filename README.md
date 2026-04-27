@@ -58,8 +58,8 @@ Each agent declares its own `model:` in frontmatter, so the matching providers m
 
 - `zai-coding-plan` — for GLM-5.1 (`@explorer`, `@finder`, `@summarizer`, `@diff-explainer`)
 - `deepseek` — for DeepSeek V4-Flash (`@implementer`, `@researcher`, `@rush`)
-- `kimi-for-coding` — for Kimi K2.6 (`@librarian`, `@smart`)
-- `openai` — for GPT-5.5 (`@reviewer`, `@oracle`, `@deep`)
+- `kimi-for-coding` — for Kimi K2.6 (`@librarian`, `@smart`, `@implementer-smart`)
+- `openai` — for GPT-5.5 (`@reviewer`, `@oracle`, `@deep`, `@implementer-deep`)
 - `opencode` — for Gemini 3 Flash (`@look-at`)
 
 If a provider isn't configured, the affected agent fails loud rather than silently falling back to a different model. Rationale and alternatives in [`docs/models.md`](docs/models.md).
@@ -114,7 +114,9 @@ Discipline skills:
 Model assignments are pinned in each agent's frontmatter; see [`docs/models.md`](docs/models.md) for the routing rationale.
 
 - `@explorer` (GLM-5.1) — Codebase tracing, file:line refs, 3–5 essential files.
-- `@implementer` (DeepSeek V4-Flash) — One phase: code + tests + commit + self-review. Receives `Owns`/`Implements`/`Consumes` from the plan's interface graph. `commit: self|defer` mode (defer for parallel waves; dispatcher commits serially). Fresh context per dispatch.
+- `@implementer` (DeepSeek V4-Flash) — Default per-phase implementer. Code + tests + commit + self-review. Receives `Owns`/`Implements`/`Consumes` from the plan's interface graph. `commit: self|defer` mode (defer for parallel waves; dispatcher commits serially). Fresh context per dispatch. Used when the phase's `Tier:` is `rush` or omitted.
+- `@implementer-smart` (Kimi K2.6) — Same contract as `@implementer`, dispatched when the phase declares `Tier: smart`. For nuanced phases where output quality matters more than throughput.
+- `@implementer-deep` (GPT-5.5) — Same contract as `@implementer`, dispatched when the phase declares `Tier: deep`. For algorithmically tricky, cross-cutting, or risk-heavy phases.
 - `@reviewer` (GPT-5.5) — Independent review against Plan + Invariants + Assumptions. Confidence-filtered (≥80), severity-tiered.
 - `@researcher` (DeepSeek V4-Flash) — Decompose a query, investigate systematically.
 - `@summarizer` (GLM-5.1) — Drafts the handoff prose for `/summary`; gathers repo state, never writes.

@@ -89,6 +89,7 @@ Approach: <1-2 sentences>
 
 ### PH1 — <name>
 
+- Tier: rush | smart | deep    (optional — omit for default rush)
 - **1.1** `path/to/file.ext:lineA-lineB` (create|modify)
   - `ClassName.method_name(arg: Type) -> Ret` — <what changes, by name>
   - Respects: IV2, AS1
@@ -117,6 +118,16 @@ Approach: <1-2 sentences>
 - PH2  IF1         -> IF3        @ plugins/up/skills/bar/SKILL.md
 - PH3  IF2, IF3 ->               @ plugins/up/agents/baz/AGENT.md
 ```
+
+## Per-phase tier (optional)
+
+Each phase may declare `Tier: rush | smart | deep`. The tier picks which implementer variant `uexecute` dispatches:
+
+- `rush` (default when omitted) — `@implementer` on `deepseek/deepseek-v4-flash`. Cheap, fast, 1M context. Right for mechanical phases: file moves, renames, format changes, single-symbol replacements, doc edits, glue code that follows an obvious pattern.
+- `smart` — `@implementer-smart` on `kimi-for-coding/k2p6`. Right for nuanced phases: anything that benefits from production-quality output, decisions that require reading multiple files to make a careful change, prose-heavy edits (READMEs, error messages, doc rewrites), refactors that touch behavior.
+- `deep` — `@implementer-deep` on `openai/gpt-5.5`. Right for algorithmically tricky, cross-cutting, or high-risk phases: concurrency, cryptography, performance-critical loops, anything where a subtle mistake is expensive and the diff is small enough that premium spend is justified.
+
+Tier is a per-phase property — different phases in the same plan can run on different tiers. Default to omitting Tier (= rush); only escalate when the phase clearly needs it. Justify smart and deep choices in one short sentence under the phase if the reason isn't obvious from the bullets.
 
 ## When to declare interfaces
 
